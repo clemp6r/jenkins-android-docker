@@ -1,0 +1,17 @@
+# To build the docker image
+docker build -t="clemp6r/jenkinsandroid" .
+
+# To run
+docker run -p 8080:8080 clemp6r/jenkinsandroid
+
+# Launch a shell in a running container
+docker exec -i -t <container> /bin/bash
+
+# Workaround to port forwarding with boot2docker
+boot2docker ssh -L 8080:localhost:8080
+
+# Stop all containers
+docker stop $(docker ps -a -q)
+
+# Remove all containers
+docker rm $(docker ps -a -q)
