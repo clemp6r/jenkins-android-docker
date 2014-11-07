@@ -23,15 +23,8 @@ EXPOSE 8080
 # will be used by attached slave agents:
 EXPOSE 50000
 
-USER jenkins
-
-COPY jenkins.sh /usr/local/bin/jenkins.sh
-ENTRYPOINT ["/usr/local/bin/jenkins.sh"]
-
-USER root
-  
 # Install Android SDK
-RUN cd /usr/local/ && wget -nv http://dl.google.com/android/android-sdk_r23.0.2-linux.tgz && tar xfo android-sdk_r23.0.2-linux.tgz --no-same-permissions
+RUN cd /usr/local/ && wget -nv http://dl.google.com/android/android-sdk_r23.0.2-linux.tgz && tar xfo android-sdk_r23.0.2-linux.tgz --no-same-permissions && chmod -R a+rX /usr/local/android-sdk-linux
 
 # Install Android tools
 RUN echo y | /usr/local/android-sdk-linux/tools/android update sdk --filter tools --no-ui --force -a
@@ -59,10 +52,10 @@ RUN rm -rf /usr/local/android-sdk_r23.0.2-linux.tgz
 RUN rm -rf /usr/local/apache-maven-3.1.1-bin.tar.gz
 RUN rm -rf /usr/local/gradle-1.9-all.zip
 
-# Fix permissions
-RUN chmod -R a+rX /usr/local/android-sdk-linux
-
 USER jenkins
+
+COPY jenkins.sh /usr/local/bin/jenkins.sh
+ENTRYPOINT ["/usr/local/bin/jenkins.sh"]
 
 # Install some useful Jenkins plugins (Git, Android Emulator)
 RUN cd $JENKINS_HOME && mkdir plugins && cd plugins && \
