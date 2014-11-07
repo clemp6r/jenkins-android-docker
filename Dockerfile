@@ -30,7 +30,7 @@ RUN cd /usr/local/ && wget -nv http://dl.google.com/android/android-sdk_r23.0.2-
 RUN echo y | /usr/local/android-sdk-linux/tools/android update sdk --filter tools --no-ui --force -a
 RUN echo y | /usr/local/android-sdk-linux/tools/android update sdk --filter platform-tools --no-ui --force -a
 RUN echo y | /usr/local/android-sdk-linux/tools/android update sdk --filter platform --no-ui --force -a
-RUN echo y | /usr/local/android-sdk-linux/tools/android update sdk --filter build-tools-21.0.1 --no-ui
+RUN echo y | /usr/local/android-sdk-linux/tools/android update sdk --filter build-tools-21.0.1 --no-ui -a
 
 # Install Maven
 RUN cd /usr/local/ && wget -nv http://ftp.tsukuba.wide.ad.jp/software/apache/maven/maven-3/3.1.1/binaries/apache-maven-3.1.1-bin.tar.gz && tar xf apache-maven-3.1.1-bin.tar.gz
