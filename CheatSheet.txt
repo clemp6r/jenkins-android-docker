@@ -2,7 +2,7 @@
 docker build -t="clemp6r/jenkinsandroid" .
 
 # To run
-docker run -p 8080:8080 clemp6r/jenkinsandroid
+docker run --privileged -i -t -p 8080:8080 clemp6r/jenkinsandroid
 
 # Launch a shell in a running container
 docker exec -i -t <container> /bin/bash
