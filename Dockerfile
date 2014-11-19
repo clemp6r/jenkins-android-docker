@@ -4,7 +4,7 @@ FROM java:openjdk-7u65-jdk
 RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y wget git curl zip lib32z1 libstdc++6:i386 libsdl1.2debian:i386 libgl1-mesa-glx:i386 qemu-kvm kmod && rm -rf /var/lib/apt/lists/*
 
 ENV JENKINS_VERSION stable-1.580
-RUN mkdir /usr/share/jenkins/
+RUN mkdir /usr/share/jenkins/ && mkdir /var/jenkins_home
 RUN useradd -d /home/jenkins -m -s /bin/bash jenkins
 
 COPY init.groovy /tmp/WEB-INF/init.groovy.d/tcp-slave-angent-port.groovy
@@ -12,7 +12,7 @@ RUN curl -L https://updates.jenkins-ci.org/$JENKINS_VERSION/latest/jenkins.war -
   && cd /tmp && zip -g /usr/share/jenkins/jenkins.war WEB-INF/init.groovy.d/tcp-slave-angent-port.groovy && rm -rf /tmp/WEB-INF
 
 ENV JENKINS_HOME /var/jenkins_home
-RUN usermod -m -d "$JENKINS_HOME" jenkins && chown -R jenkins "$JENKINS_HOME"
+RUN chown -R jenkins "$JENKINS_HOME"
 
 # define url prefix for running jenkins behind Apache (https://wiki.jenkins-ci.org/display/JENKINS/Running+Jenkins+behind+Apache)
 ENV JENKINS_PREFIX /
@@ -45,19 +45,19 @@ RUN rm -rf /usr/local/gradle-1.9-all.zip
 USER jenkins
 
 # Install Android SDK
-RUN cd $JENKINS_HOME && wget -nv http://dl.google.com/android/android-sdk_r23.0.2-linux.tgz && tar xfo android-sdk_r23.0.2-linux.tgz --no-same-permissions && chmod -R a+rX android-sdk-linux
-RUN rm -rf $JENKINS_HOME/android-sdk_r23.0.2-linux.tgz
+RUN cd /home/jenkins && wget -nv http://dl.google.com/android/android-sdk_r23.0.2-linux.tgz && tar xfo android-sdk_r23.0.2-linux.tgz --no-same-permissions && chmod -R a+rX android-sdk-linux
+RUN rm -rf /home/jenkins/android-sdk_r23.0.2-linux.tgz
 
 # Install Android tools
-RUN echo y | $JENKINS_HOME/android-sdk-linux/tools/android update sdk --filter tools --no-ui --force -a
-RUN echo y | $JENKINS_HOME/android-sdk-linux/tools/android update sdk --filter platform-tools --no-ui --force -a
-RUN echo y | $JENKINS_HOME/android-sdk-linux/tools/android update sdk --filter platform --no-ui --force -a
-RUN echo y | $JENKINS_HOME/android-sdk-linux/tools/android update sdk --filter build-tools-21.0.1 --no-ui -a
-RUN echo y | $JENKINS_HOME/android-sdk-linux/tools/android update sdk --filter sys-img-x86-android-18 --no-ui -a
-RUN echo y | $JENKINS_HOME/android-sdk-linux/tools/android update sdk --filter sys-img-x86-android-19 --no-ui -a
-RUN echo y | $JENKINS_HOME/android-sdk-linux/tools/android update sdk --filter sys-img-x86-android-21 --no-ui -a
+RUN echo y | /home/jenkins/android-sdk-linux/tools/android update sdk --filter tools --no-ui --force -a
+RUN echo y | /home/jenkins/android-sdk-linux/tools/android update sdk --filter platform-tools --no-ui --force -a
+RUN echo y | /home/jenkins/android-sdk-linux/tools/android update sdk --filter platform --no-ui --force -a
+RUN echo y | /home/jenkins/android-sdk-linux/tools/android update sdk --filter build-tools-21.0.1 --no-ui -a
+RUN echo y | /home/jenkins/android-sdk-linux/tools/android update sdk --filter sys-img-x86-android-18 --no-ui -a
+RUN echo y | /home/jenkins/android-sdk-linux/tools/android update sdk --filter sys-img-x86-android-19 --no-ui -a
+RUN echo y | /home/jenkins/android-sdk-linux/tools/android update sdk --filter sys-img-x86-android-21 --no-ui -a
 
-ENV ANDROID_HOME $JENKINS_HOME/android-sdk-linux
+ENV ANDROID_HOME /home/jenkins/android-sdk-linux
 
 COPY jenkins.sh /usr/local/bin/jenkins.sh
 ENTRYPOINT ["/usr/local/bin/jenkins.sh"]
