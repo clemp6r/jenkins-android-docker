@@ -1,3 +1,5 @@
+### Proof of concept - not maintained
+
 Docker image for running Android UI tests on emulators with Jenkins (work in progress).
 It has been mainly created to run android emulators through KVM virtualization on x86 machines.
 Running the container inside a virtual machine will also work but it will not benefit of KVM (i.e emulators will be slow).
